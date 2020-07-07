@@ -1,0 +1,31 @@
+{
+  "name": "biothings_explorer_graphql",
+  "version": "0.1.0",
+  "description": "GraphQL app for BioThings Explorer",
+  "main": "src/server.js",
+  "scripts": {
+    "serve": "node src/server.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ericz1803/biothings_explorer_graphql.git"
+  },
+  "author": "Eric Zhou",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ericz1803/biothings_explorer_graphql/issues"
+  },
+  "homepage": "https://github.com/ericz1803/biothings_explorer_graphql#readme",
+  "dependencies": {
+    "@biothings-explorer/call-apis": "^1.0.2",
+    "@biothings-explorer/smartapi-kg": "^1.1.4",
+    "apollo-server": "^2.15.1",
+    "graphql": "^15.2.0"
+  },
+  "devDependencies": {
+    "graphql-cli": "^4.0.0",
+    "jest": "^26.1.0",
+    "rewire": "^5.0.0"
+  }
+}

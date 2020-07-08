@@ -9,7 +9,7 @@ function getSchema(predicates, object_types) {
     interface ObjectType {
       id: String!
       name: String!
-      publication: String
+      publication: [String]
       api: String
       source: String
       objectType: String
@@ -20,7 +20,7 @@ function getSchema(predicates, object_types) {
       type ${obj_type} implements ObjectType {
         id: String!
         name: String!
-        publication: String
+        publication: [String]
         api: String
         source: String
         objectType: String

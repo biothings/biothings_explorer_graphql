@@ -12,6 +12,7 @@ function getSchema(predicates, object_types) {
       publication: String
       api: String
       source: String
+      objectType: String
       ${predicates.map((p) => `${p}(types: [String]): [ObjectType]`).join("\n")}
     }
     
@@ -22,6 +23,7 @@ function getSchema(predicates, object_types) {
         publication: String
         api: String
         source: String
+        objectType: String
         ${predicates.map((p) => `${p}(types: [String]): [ObjectType]`).join("\n")}
       }
     `

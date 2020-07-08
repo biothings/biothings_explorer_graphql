@@ -21,7 +21,8 @@
     "@biothings-explorer/call-apis": "^1.0.2",
     "@biothings-explorer/smartapi-kg": "^1.1.4",
     "apollo-server": "^2.15.1",
-    "graphql": "^15.2.0"
+    "biomedical_id_resolver": "^1.0.1",
+    "graphql": "^15.3.0"
   },
   "devDependencies": {
     "graphql-cli": "^4.0.0",

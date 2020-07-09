@@ -1,5 +1,6 @@
 const callApis = require("@biothings-explorer/call-apis");
 const biomedicalIdResolve = require("biomedical_id_resolver");
+const _ = require("lodash");
 
 /**
  * Generic resolver for deeper queries (2nd level and deeper)
@@ -13,28 +14,42 @@ const biomedicalIdResolve = require("biomedical_id_resolver");
  */
 async function basicResolver(kg, inputType, inputId, predicate, outputTypes) {
   //get list of apis to query using smartapi-kg
-  let ops;
-  if (outputTypes) {
-    ops = kg.filter({ input_type: inputType, predicate: predicate, output_type: outputTypes });
-  } else {
-    ops = kg.filter({ input_type: inputType, predicate: predicate });
-  }
+  let ops_filter = { input_type: inputType, predicate: predicate, output_type: outputTypes };
+  ops_filter = _.omitBy(ops_filter, _.isNil); //remove undefined and null from object  
+  let ops = kg.filter(ops_filter);
 
   //use biomedical_id_resolver to get info about input
   let input = {};
   input[inputType] = [inputId];
   let output = await biomedicalIdResolve(input);
 
-  //inject ids into ops for querying
-  ops.forEach((op, idx, arr) => {
-    try {
-      let apiInputIdType = op.association.input_id;
-      let apiInputId = output[inputId].bte_ids[apiInputIdType];
-      arr[idx].input = apiInputId;
-    } catch (e) {
-      console.log(e);
+  //TODO: get rid of try catch when problem with biomedical_id_resolver is fixed
+  try {
+    if (output[inputId].flag == "failed") {
+      console.log("PROBLEM ", input, inputId);
+      return []; //abort if id resolution fails
     }
-  });
+  } catch (e) {
+    console.log("PROBLEM", input, output);
+    return [];
+  }
+
+  //inject ids into ops for querying
+  for (let i = ops.length - 1; i >= 0; i--) {
+    try {
+      let apiInputIdType = ops[i].association.input_id;
+      let apiInputId = output[inputId].bte_ids[apiInputIdType];
+      if (!apiInputId) {
+        console.log("IDNOTRESOLVED", apiInputIdType, inputId);
+        //remove element if id cannot be resolved
+        ops.splice(i, 1);
+      } else {
+        ops[i].input = apiInputId;
+      }
+    } catch (e) {
+      console.log("Error:", e);
+    }
+  }
 
   //use callApis to get api response
   const queryExecutor = new callApis(ops);
@@ -46,15 +61,27 @@ async function basicResolver(kg, inputType, inputId, predicate, outputTypes) {
   result.forEach((res) => {
     let publication = [];
     if (res.pmc) {
-      publication = res.pmc.map((p) => `pmc: ${p}`);
+      publication = res.pmc.map((p) => `pmc:${p}`);
     } else if (res.pubmed) {
-      publication = res.pubmed.map((p) => `pubmed: ${p}`);
+      try {
+        publication = res.pubmed.map((p) => `pubmed:${p}`);
+      } catch (e) {
+        console.log("PUBLICATION", res, res.pubmed);
+      }
+    }
+
+    let name;
+    try {
+      name = res.name || res["$output_id_mapping"].resolved.id.label;
+    } catch(e) {
+      name = "";
+      console.log("NAME ERROR WEE WOO", res);
     }
 
     ret.push({
       objectType: res["$association"].output_type,
       id: res["$output"],
-      name: res.name,
+      name: name,
       source: res["$association"].source,
       api: res["$association"].api_name,
       publication: publication,
@@ -117,15 +144,21 @@ function getResolvers(kg, predicates, objectTypes) {
   //handle object resolvers
   objectTypes.forEach((objectType) => {
     resolvers[objectType] = {};
+
+    //object -> predicates
     predicates.forEach((predicate) => {
       resolvers[objectType][predicate] = async function (parent, args) {
-        if (args.hasOwnProperty("types")) {
-          return await basicResolver(kg, parent.objectType, parent.id, predicate, args.types);
-        } else {
-          return await basicResolver(kg, parent.objectType, parent.id, predicate);
-        }
+        return await basicResolver(kg, parent.objectType, parent.id, predicate, _.get(args, "types", null));
       };
     });
+
+    //object -> object
+    objectTypes.forEach((o) => {
+      resolvers[objectType][o] = async function (parent, args) { 
+        return await basicResolver(kg, parent.objectType, parent.id, _.get(args, "predicates", null), o);
+      };
+    });
+
   });
 
   return resolvers;

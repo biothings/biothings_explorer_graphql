@@ -17,7 +17,6 @@ const getResolvers = require("./resolvers");
     `;
 
     const resolvers = getResolvers(meta_kg, predicates, object_types);
-    console.log(resolvers);
 
     const server = new ApolloServer({ typeDefs, resolvers });
 

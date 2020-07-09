@@ -14,6 +14,7 @@ function getSchema(predicates, object_types) {
       source: String
       objectType: String
       ${predicates.map((p) => `${p}(types: [String]): [ObjectType]`).join("\n")}
+      ${object_types.map((obj_type) => `${obj_type}(predicates: [String]): [ObjectType]`).join("\n")}
     }
     
     ${object_types.map((obj_type) => `
@@ -25,9 +26,9 @@ function getSchema(predicates, object_types) {
         source: String
         objectType: String
         ${predicates.map((p) => `${p}(types: [String]): [ObjectType]`).join("\n")}
+        ${object_types.map((o) => `${o}(predicates: [String]): [ObjectType]`).join("\n")}
       }
-    `
-    ).join("\n")}
+    `).join("\n")}
 
     type Query {
       ${object_types.map((obj_type) => `${obj_type}(id: String!): ${obj_type}`).join("\n")}

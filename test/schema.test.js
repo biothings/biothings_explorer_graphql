@@ -62,7 +62,6 @@ describe("test getSchema", function () {
 
   test("Correct number of object types",() => {
     let obj_types = schema.definitions.filter(obj => (obj.kind == "ObjectTypeDefinition" && obj.interfaces.length > 0));
-    console.log(obj_types)
     expect(obj_types.length).toBe(4); //Gene, Disease, BiologicalProcess, AnatomicalEntity
   })
 });

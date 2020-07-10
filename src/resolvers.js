@@ -24,30 +24,21 @@ async function basicResolver(kg, inputType, inputId, predicate, outputTypes) {
   let output = await biomedicalIdResolve(input);
 
   //TODO: get rid of try catch when problem with biomedical_id_resolver is fixed
-  try {
-    if (output[inputId].flag == "failed") {
-      console.log("PROBLEM ", input, inputId);
-      return []; //abort if id resolution fails
-    }
-  } catch (e) {
-    console.log("PROBLEM", input, output);
-    return [];
+  if (output[inputId].flag == "failed") {
+    console.log("ID RESOLUTION PROBLEM ", input, inputId);
+    return []; //abort if id resolution fails
   }
 
   //inject ids into ops for querying
   for (let i = ops.length - 1; i >= 0; i--) {
-    try {
-      let apiInputIdType = ops[i].association.input_id;
-      let apiInputId = output[inputId].bte_ids[apiInputIdType];
-      if (!apiInputId) {
-        console.log("IDNOTRESOLVED", apiInputIdType, inputId);
-        //remove element if id cannot be resolved
-        ops.splice(i, 1);
-      } else {
-        ops[i].input = apiInputId;
-      }
-    } catch (e) {
-      console.log("Error:", e);
+    let apiInputIdType = ops[i].association.input_id;
+    let apiInputId = output[inputId].bte_ids[apiInputIdType];
+    if (!apiInputId) {
+      //remove element if id cannot be resolved
+      console.log("IDNOTRESOLVED", apiInputIdType, inputId);
+      ops.splice(i, 1);
+    } else {
+      ops[i].input = apiInputId;
     }
   }
 
@@ -61,27 +52,25 @@ async function basicResolver(kg, inputType, inputId, predicate, outputTypes) {
   result.forEach((res) => {
     let publication = [];
     if (res.pmc) {
-      publication = res.pmc.map((p) => `pmc:${p}`);
-    } else if (res.pubmed) {
-      try {
-        publication = res.pubmed.map((p) => `pubmed:${p}`);
-      } catch (e) {
-        console.log("PUBLICATION", res, res.pubmed);
+      //check if res.pmc is array or string
+      if (Array.isArray(res.pmc)) {
+        publication = res.pmc.map((p) => `pmc:${p}`);
+      } else {
+        publication.push(`pmc:${res.pmc}`);
       }
-    }
-
-    let name;
-    try {
-      name = res.name || res["$output_id_mapping"].resolved.id.label;
-    } catch(e) {
-      name = "";
-      console.log("NAME ERROR WEE WOO", res);
+    } else if (res.pubmed) {
+      //check if res.pubmed is array or string
+      if (Array.isArray(res.pubmed)) {
+        publication = res.pubmed.map((p) => `pubmed:${p}`);
+      } else {
+        publication.push(`pubmed:${res.pubmed}`);
+      }
     }
 
     ret.push({
       objectType: res["$association"].output_type,
       id: res["$output"],
-      name: name,
+      name: res["$output_id_mapping"].resolved.id.label || res.name || "",
       source: res["$association"].source,
       api: res["$association"].api_name,
       publication: publication,
@@ -115,47 +104,33 @@ async function baseLevelResolver(id, objectType) {
 /**
  * get resolvers object
  * @param {MetaKG} kg knowledge graph
- * @param {Array.<string>} predicates Array of all possible predicates (eg. related_to, treats)
- * @param {Array.<string>} object_types Array of all possible object types (eg. AnatomicalEntity, BiologicalProcess)
+ * @param {Object} edges Object containing all possible edges and predicates (see getEdges function in utils)
  * @returns {Object} object containing resolvers for apollo server
  */
-function getResolvers(kg, predicates, objectTypes) {
+function getResolvers(kg, edges) {
   let resolvers = {};
 
   //interface resolve type
   resolvers.ObjectType = {
     __resolveType(obj) {
-      if (obj.objectType) {
-        return obj.objectType;
-      }
-
       return null;
     },
   };
 
   //handle query resolvers
   resolvers.Query = {};
-  objectTypes.forEach((objectType) => {
+  Object.keys(edges).forEach((objectType) => {
     resolvers.Query[objectType] = async function (parent, args, context, info) {
       return await baseLevelResolver(args.id, objectType);
     };
   });
 
   //handle object resolvers
-  objectTypes.forEach((objectType) => {
+  Object.keys(edges).forEach((objectType) => {
     resolvers[objectType] = {};
-
-    //object -> predicates
-    predicates.forEach((predicate) => {
-      resolvers[objectType][predicate] = async function (parent, args) {
-        return await basicResolver(kg, parent.objectType, parent.id, predicate, _.get(args, "types", null));
-      };
-    });
-
-    //object -> object
-    objectTypes.forEach((o) => {
-      resolvers[objectType][o] = async function (parent, args) { 
-        return await basicResolver(kg, parent.objectType, parent.id, _.get(args, "predicates", null), o);
+    Object.keys(edges[objectType]).forEach((outputType) => {
+      resolvers[objectType][outputType] = async function (parent, args) { 
+        return await basicResolver(kg, parent.objectType, parent.id, _.get(args, "predicates", null), outputType);
       };
     });
 

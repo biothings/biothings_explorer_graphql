@@ -1,7 +1,4 @@
-const rewire = require("rewire");
-var utils = rewire("../src/utils.js");
-
-getPredicates = utils.__get__("getPredicates");
+var { getPredicates, getObjectTypes, getEdges } = require("../src/utils");
 
 describe("test getPredicates function", function () {
   test("Empty case", function () {
@@ -49,8 +46,6 @@ describe("test getPredicates function", function () {
     expect(getPredicates(input)).toEqual(expected);
   });
 });
-
-getObjectTypes = utils.__get__("getObjectTypes");
 
 describe("test getObjectTypes function", function () {
   test("Empty case", function () {
@@ -101,5 +96,81 @@ describe("test getObjectTypes function", function () {
     ];
     let expected = ["AnatomicalEntity", "Disease", "Gene"];
     expect(getObjectTypes(input)).toEqual(expected);
+  });
+});
+
+describe("test getEdges function", function () {
+  test("Empty case", function () {
+    let input = [];
+    let expected = {};
+    expect(getEdges(input)).toEqual(expected);
+  });
+
+  test("Alphabetical order and no duplicates returned", function () {
+    let input = [
+      {
+        association: {
+          input_type: "Gene",
+          output_type: "Disease",
+          predicate: "related_to",
+        },
+      },
+      {
+        association: {
+          input_type: "Gene",
+          output_type: "Disease",
+          predicate: "affects",
+        },
+      },
+      {
+        association: {
+          input_type: "BiologicalProcess",
+          output_type: "Disease",
+          predicate: "related_to",
+        },
+      },
+      {
+        association: {
+          input_type: "AnatomicalEntity",
+          output_type: "Disease",
+          predicate: "related_to",
+        },
+      },
+    ];
+
+    let output = getEdges(input);
+    expect(output["Gene"]["Disease"]).toEqual(["affects", "related_to"]);
+    expect(output["BiologicalProcess"]["Disease"]).toEqual(["related_to"]);
+    expect(output["AnatomicalEntity"]["Disease"]).toEqual(["related_to"]);
+  });
+
+  test("Special case with colon", function () {
+    let input = [
+      {
+        association: {
+          input_type: "biolink:Gene",
+          output_type: "biolink:Disease",
+          predicate: "biolink:related_to"
+        },
+      },
+      {
+        association: {
+          input_type: "Gene",
+          output_type: "Disease",
+          predicate: "related_to"
+        },
+      },
+      {
+        association: {
+          input_type: "Gene",
+          output_type: "Disease",
+          predicate: "affects"
+        },
+      },
+    ];
+
+    let output = getEdges(input);
+    expect(output["Gene"]["Disease"]).toEqual(["affects", "related_to"]);
+    expect(output.hasOwnProperty("biolink:Gene")).toBeFalsy();
   });
 });

@@ -5,6 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "serve": "node src/server.js",
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "test": "jest"
   },
   "repository": {
@@ -26,6 +27,7 @@
     "lodash": "^4.17.19"
   },
   "devDependencies": {
+    "coveralls": "^3.1.0",
     "graphql-cli": "^4.0.0",
     "jest": "^26.1.0",
     "rewire": "^5.0.0"

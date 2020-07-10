@@ -6,7 +6,7 @@ const _ = require("lodash");
  * @param {Object} edges Object containing all possible edges and predicates (see getEdges function in utils)
  * @returns {String} schema in GraphQL SDL format
  */
-function getSchema(predicates, object_types, edges) {
+function getSchema(object_types, edges) {
   return `
     ${Object.keys(edges).map((objectType) => { //generate an enum for each possible ObjectType -> ObjectType relationship
       //if the input type is Gene and output type is Disease then the enum will be called GeneToDiseasePredicates
@@ -17,10 +17,6 @@ function getSchema(predicates, object_types, edges) {
         }
       `).join("\n");
     }).join("\n")}
-
-    enum Predicates {
-      ${predicates.join("\n")}
-    }
 
     interface ObjectType {
       "The id of the object in the form 'idType:id', eg. 'NCBIGene:7852' or 'UMLS:C1332823'"

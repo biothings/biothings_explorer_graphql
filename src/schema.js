@@ -9,7 +9,7 @@ const _ = require("lodash");
 function getSchema(object_types, edges) {
   return `
     ${Object.keys(edges).map((objectType) => { //generate an enum for each possible ObjectType -> ObjectType relationship
-      //if the input type is Gene and output type is Disease then the enum will be called GeneToDiseasePredicates
+      //for example if the input type is Gene and output type is Disease then the enum will be called GeneToDiseasePredicates
       return Object.keys(edges[objectType]).map((outputType) => 
       `
         enum ${objectType}To${outputType}Predicates {

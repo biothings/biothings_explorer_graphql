@@ -24,6 +24,7 @@
     "apollo-server": "^2.15.1",
     "biomedical_id_resolver": "^1.0.4",
     "graphql": "^15.3.0",
+    "graphql-resolve-batch": "^1.0.2",
     "lodash": "^4.17.19"
   },
   "devDependencies": {

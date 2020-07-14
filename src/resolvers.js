@@ -38,7 +38,7 @@ async function batchResolver(kg, inputIds, inputType, predicate, outputType) {
     resolvedIds.forEach(id => { 
       let apiInputIds = output[id].bte_ids[apiInputIdType];
       if (apiInputIds) {
-        valid_ids.push(apiInputIds);
+        valid_ids = valid_ids.concat(apiInputIds);
 
         let ids = output[id].equivalent_identifiers.map(x => x.identifier).filter(x => x.startsWith(apiInputIdType)); //get apiInputIds but with type in front always
         ids.forEach(apiInputId => {
@@ -55,8 +55,8 @@ async function batchResolver(kg, inputIds, inputType, predicate, outputType) {
       query_ops.push(op);
     } else { // create a separate op for each id if batch input isn't available
       for (let i = 0; i < valid_ids.length; i++) {
-        let temp_op = _.clone(op);
-        temp_op.input = valid_ids[i];
+        let temp_op = { ...op }; //make copy of op
+        temp_op.input = [valid_ids[i]];
         temp_op.original_input = _.pick(valid_original_ids, [valid_ids[i]]);
         query_ops.push(temp_op);
       }
@@ -220,7 +220,7 @@ function getResolvers(kg, edges) {
 
   //interface resolve type
   resolvers.ObjectType = {
-    __resolveType(obj) {
+    __resolveType() {
       return null;
     },
   };

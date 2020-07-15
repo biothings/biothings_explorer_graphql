@@ -21,7 +21,7 @@ function getSchema(object_types, edges) {
     interface ObjectType {
       "The id of the object in the form 'idType:id', eg. 'NCBIGene:7852' or 'UMLS:C1332823'"
       id: String!
-      name: String
+      label: String
       "Publication numbers, either PMC or Pubmed, eg. ['pmc:PMC6522480', 'pmc:PMC6757502'] or ['pubmed:16357147', 'pubmed:18512766']"
       publication: [String]
       "api that was used"
@@ -33,7 +33,7 @@ function getSchema(object_types, edges) {
       type ${objectType} implements ObjectType {
         "The id of the object in the form 'idType:id', eg. 'NCBIGene:7852' or 'UMLS:C1332823'"
         id: String!
-        name: String
+        label: String
         "Publication numbers, either PMC or Pubmed, eg. ['pmc:PMC6522480', 'pmc:PMC6757502'] or ['pubmed:16357147', 'pubmed:18512766']"
         publication: [String]
         "api that was used"

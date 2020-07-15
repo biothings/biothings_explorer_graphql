@@ -55,7 +55,7 @@ async function batchResolver(kg, inputIds, inputType, predicate, outputType) {
       for (let i = 0; i < valid_ids.length; i++) {
         let temp_op = { ...op }; //make copy of op
         temp_op.input = [valid_ids[i]];
-        temp_op.original_input = _.pick(valid_original_ids, [valid_ids[i]]);
+        temp_op.original_input = valid_original_ids;
         query_ops.push(temp_op);
       }
     }

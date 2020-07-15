@@ -1,6 +1,6 @@
 var getSchema = require("../src/schema");
 const { getObjectTypes, getEdges } = require("../src/utils");
-const { gql } = require("apollo-server");
+const { gql } = require("apollo-server-express");
 const kg = require("@biothings-explorer/smartapi-kg");
 
 describe("test getSchema", function () {

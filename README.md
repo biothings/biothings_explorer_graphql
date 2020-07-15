@@ -1,4 +1,4 @@
-# biothings_explorer_graphql
+# Biothings Explorer GraphQL
 [![Build Status](https://travis-ci.com/ericz1803/biothings_explorer_graphql.svg?branch=master)](https://travis-ci.com/ericz1803/biothings_explorer_graphql) [![Coverage Status](https://coveralls.io/repos/github/ericz1803/biothings_explorer_graphql/badge.svg?branch=master)](https://coveralls.io/github/ericz1803/biothings_explorer_graphql?branch=master)  
 GraphQL app for BioThings Explorer
 

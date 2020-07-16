@@ -40,7 +40,7 @@ function getSchema(object_types, edges) {
         api: String
         source: String
         ${Object.keys(_.get(edges, objectType, {})).map((outputType) => 
-          `${outputType}(predicates: [${objectType}To${outputType}Predicates]): [${outputType}]`
+          `${outputType}(predicates: [${objectType}To${outputType}Predicates], apis: [String]): [${outputType}]`
         ).join("\n")}
       }
     `).join("\n")}

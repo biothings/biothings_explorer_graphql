@@ -9,13 +9,14 @@ const { createBatchResolver } = require("graphql-resolve-batch");
  * @param {MetaKG} kg knowledge graph
  * @param {Array.<string>} inputIds array of ids (eg. ["NCBIGene:7852", "UMLS:C1332823"])
  * @param {String} inputType input object type (eg. AnatomicalEntity, BiologicalProcess)
- * @param {String | Array.<string>} predicate predicate (eg. related_to, treats)
  * @param {String | Array.<string>} outputTypes output object types (eg. AnatomicalEntity, BiologicalProcess)
+ * @param {String | Array.<string>} predicate predicate (eg. related_to, treats)
+ * @param {String | Array.<string>} api apis to query (eg. "Automat PHAROS API")
  * @return {Array} array of arrays of objects that is in the shape of an ObjectType
  */
-async function batchResolver(kg, inputIds, inputType, predicate, outputType) {
+async function batchResolver(kg, inputIds, inputType, outputType, predicate, api) {
   //get list of apis to query using smartapi-kg
-  let ops_filter = { input_type: inputType, predicate: predicate, output_type: outputType };
+  let ops_filter = { input_type: inputType, predicate: predicate, output_type: outputType, api: api };
   ops_filter = _.omitBy(ops_filter, _.isNil); //remove undefined and null from object  
   let ops = kg.filter(ops_filter);
 
@@ -46,6 +47,11 @@ async function batchResolver(kg, inputIds, inputType, predicate, outputType) {
         })
       }
     });
+
+    //go to next op if there are no valid ids
+    if (valid_ids.length == 0) {
+      return;
+    }
 
     if (op.query_operation.supportBatch) { // use batch input if available
       op.input = valid_ids;
@@ -156,7 +162,7 @@ function getResolvers(kg, edges) {
     Object.keys(edges[objectType]).forEach((outputType) => {
       resolvers[objectType][outputType] = createBatchResolver(async function (parent, args) { 
         ids = parent.map(obj => obj.id);
-        return await batchResolver(kg, ids, objectType, _.get(args, "predicates", null), outputType);
+        return await batchResolver(kg, ids, objectType, outputType, _.get(args, "predicates", null), _.get(args, "apis", null));
       });
     });
 

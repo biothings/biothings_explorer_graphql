@@ -1,6 +1,6 @@
 {
   "name": "biothings-explorer-graphql",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GraphQL app for BioThings Explorer",
   "main": "index.js",
   "scripts": {

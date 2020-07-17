@@ -41,7 +41,7 @@ async function batchResolver(kg, inputIds, inputType, outputType, predicate, api
       if (apiInputIds) {
         valid_ids = valid_ids.concat(apiInputIds);
 
-        let ids = output[id].equivalent_identifiers.map(x => x.identifier).filter(x => x.startsWith(apiInputIdType)); //get apiInputIds but with type always in front
+        let ids = output[id].equivalent_identifiers.map(x => x.identifier).filter(x => x.startsWith(apiInputIdType)); //get prefixed ids
         ids.forEach(apiInputId => {
           valid_original_ids[apiInputId] = id;
         })
@@ -54,12 +54,13 @@ async function batchResolver(kg, inputIds, inputType, outputType, predicate, api
     }
 
     if (op.query_operation.supportBatch) { // use batch input if available
-      op.input = valid_ids;
-      op.original_input = valid_original_ids;
-      query_ops.push(op);
+      let temp_op = _.cloneDeep(op);
+      temp_op.input = valid_ids;
+      temp_op.original_input = valid_original_ids;
+      query_ops.push(temp_op);
     } else { // create a separate op for each id if batch input isn't available
       for (let i = 0; i < valid_ids.length; i++) {
-        let temp_op = { ...op }; //make copy of op
+        let temp_op = _.cloneDeep(op); //make copy of op
         temp_op.input = [valid_ids[i]];
         temp_op.original_input = valid_original_ids;
         query_ops.push(temp_op);

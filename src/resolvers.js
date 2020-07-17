@@ -126,7 +126,7 @@ async function baseLevelResolver(id, objectType) {
   return {
     id: id,
     label: output[id].id.label,
-    publication: "",
+    publication: [],
     api: "",
     source: "",
   };

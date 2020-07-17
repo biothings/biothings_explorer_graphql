@@ -155,7 +155,7 @@ function getResolvers(kg, edges) {
   resolvers.Query = {};
   Object.keys(edges).forEach((objectType) => {
     resolvers.Query[objectType] = async function (parent, args) {
-      return await baseLevelResolver(args.id, objectType);
+      return await baseLevelResolver(args.ids, objectType);
     };
   });
 

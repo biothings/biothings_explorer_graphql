@@ -1,6 +1,6 @@
 {
   "name": "biothings-explorer-graphql",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "GraphQL app for BioThings Explorer",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/ericz1803/biothings_explorer_graphql#readme",
   "dependencies": {
-    "@biothings-explorer/call-apis": "^1.0.2",
+    "@biothings-explorer/call-apis": "^1.0.3",
     "@biothings-explorer/smartapi-kg": "^1.1.6",
     "apollo-server-express": "^2.16.0",
     "biomedical_id_resolver": "^1.0.8",

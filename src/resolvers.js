@@ -54,13 +54,13 @@ async function batchResolver(kg, inputIds, inputType, outputType, predicate, api
     }
 
     if (op.query_operation.supportBatch) { // use batch input if available
-      let temp_op = _.cloneDeep(op);
+      let temp_op = { ...op };
       temp_op.input = valid_ids;
       temp_op.original_input = valid_original_ids;
       query_ops.push(temp_op);
     } else { // create a separate op for each id if batch input isn't available
       for (let i = 0; i < valid_ids.length; i++) {
-        let temp_op = _.cloneDeep(op); //make copy of op
+        let temp_op = { ...op }; //make copy of op
         temp_op.input = [valid_ids[i]];
         temp_op.original_input = valid_original_ids;
         query_ops.push(temp_op);
@@ -115,22 +115,22 @@ async function batchResolver(kg, inputIds, inputType, outputType, predicate, api
 
 /**
  * Generic resolver for Query fields
- * @param {String} id id (eg. "NCBIGene:1017", "MONDO:0004976")
+ * @param {Array.<string>} ids ids (eg. ["NCBIGene:1017", "MONDO:0004976"])
  * @param {String} ObjectType object type of id (eg. AnatomicalEntity, BiologicalProcess)
  * @return {Object} object with basic fields populated (id, label) and empty values for publication, api, and source fields
  */
-async function baseLevelResolver(id, objectType) {
+async function baseLevelResolver(ids, objectType) {
   let input = {};
-  input[objectType] = [id];
+  input[objectType] = ids;
   let output = await biomedicalIdResolve(input);
 
-  return {
-    id: id,
+  return ids.map(id => ({
+    id: output[id].id.identifier,
     label: output[id].id.label,
     publication: [],
     api: "",
     source: "",
-  };
+  }));
 }
 
 /**

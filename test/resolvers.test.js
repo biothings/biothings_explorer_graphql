@@ -6,9 +6,18 @@ describe("test base level resolver", function () {
   const baseLevelResolver = resolvers.__get__('baseLevelResolver');
 
   test("id and label fields are filled", async function() {
-    const data = await baseLevelResolver("MONDO:1234", "Disease");
-    expect(data.id.length).toBeGreaterThan(0);
-    expect(data.label.length).toBeGreaterThan(0);
+    const data = await baseLevelResolver(["MONDO:1234"], "Disease");
+    expect(data.length).toEqual(1);
+    expect(data[0].id.length).toBeGreaterThan(0);
+    expect(data[0].label.length).toBeGreaterThan(0);
+  });
+  test("multi query", async function() {
+    const data = await baseLevelResolver(["NCBIGene:7852", "NCBIGene:1234"], "Gene");
+    expect(data.length).toEqual(2);
+    expect(data[0].id.length).toBeGreaterThan(0);
+    expect(data[0].label.length).toBeGreaterThan(0);
+    expect(data[1].id.length).toBeGreaterThan(0);
+    expect(data[1].label.length).toBeGreaterThan(0);
   });
 });
 

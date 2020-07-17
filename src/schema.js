@@ -46,7 +46,7 @@ function getSchema(object_types, edges) {
     `).join("\n")}
 
     type Query {
-      ${Object.keys(edges).map((objectType) => `${objectType}(id: String!): ${objectType}`).join("\n") /* use edges since that will only give possible inputs*/}
+      ${Object.keys(edges).map((objectType) => `${objectType}(id: [String]!): [${objectType}]`).join("\n") /* use edges since that will only give possible inputs*/}
     }
   `;
 }

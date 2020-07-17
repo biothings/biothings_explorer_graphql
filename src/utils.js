@@ -9,7 +9,7 @@ function getPredicates(ops) {
   let predicates = new Set();
 
   ops.map((op) => {
-    //deal with predicates such as `biolink:related_to` while also working for normal `related_to`
+    //deal with predicates such as `biolink:related_to` while also working for normal predicates such as `related_to`
     predicates.add(op.association.predicate.split(":").slice(-1)[0]);
   });
 
@@ -25,7 +25,7 @@ function getObjectTypes(ops) {
   let object_types = new Set();
 
   ops.map((op) => {
-    //use split and slice to deal with object_types such as `biolink:Gene` while also working for normal `Gene`
+    //use split and slice to deal with types such as `biolink:Gene` while also working for normal types such as `Gene`
     object_types.add(op.association.input_type.split(":").slice(-1)[0]);
     object_types.add(op.association.output_type.split(":").slice(-1)[0]);
   });

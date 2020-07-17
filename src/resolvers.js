@@ -107,6 +107,7 @@ async function batchResolver(kg, inputIds, inputType, outputType, predicate, api
       source: res["$association"].source,
       api: res["$association"].api_name,
       publication: publication,
+      predicate: res["$association"].predicate,
     });
   });
 
@@ -130,6 +131,7 @@ async function baseLevelResolver(ids, objectType) {
     publication: [],
     api: "",
     source: "",
+    predicate: "",
   }));
 }
 

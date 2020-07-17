@@ -27,6 +27,7 @@ function getSchema(object_types, edges) {
       "api that was used"
       api: String
       source: String
+      predicate: String
     }
     
     ${object_types.map((objectType) => `
@@ -39,14 +40,15 @@ function getSchema(object_types, edges) {
         "api that was used"
         api: String
         source: String
+        predicate: String
         ${Object.keys(_.get(edges, objectType, {})).map((outputType) => 
-          `${outputType}(predicates: [${objectType}To${outputType}Predicates]): [${outputType}]`
+          `${outputType}(predicates: [${objectType}To${outputType}Predicates], apis: [String]): [${outputType}]`
         ).join("\n")}
       }
     `).join("\n")}
 
     type Query {
-      ${Object.keys(edges).map((objectType) => `${objectType}(id: String!): ${objectType}`).join("\n") /* use edges since that will only give possible inputs*/}
+      ${Object.keys(edges).map((objectType) => `${objectType}(id: [String]!): [${objectType}]`).join("\n") /* use edges since that will only give possible inputs*/}
     }
   `;
 }

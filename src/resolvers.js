@@ -9,13 +9,14 @@ const { createBatchResolver } = require("graphql-resolve-batch");
  * @param {MetaKG} kg knowledge graph
  * @param {Array.<string>} inputIds array of ids (eg. ["NCBIGene:7852", "UMLS:C1332823"])
  * @param {String} inputType input object type (eg. AnatomicalEntity, BiologicalProcess)
- * @param {String | Array.<string>} predicate predicate (eg. related_to, treats)
  * @param {String | Array.<string>} outputTypes output object types (eg. AnatomicalEntity, BiologicalProcess)
+ * @param {String | Array.<string>} predicate predicate (eg. related_to, treats)
+ * @param {String | Array.<string>} api apis to query (eg. "Automat PHAROS API")
  * @return {Array} array of arrays of objects that is in the shape of an ObjectType
  */
-async function batchResolver(kg, inputIds, inputType, predicate, outputType) {
+async function batchResolver(kg, inputIds, inputType, outputType, predicate, api) {
   //get list of apis to query using smartapi-kg
-  let ops_filter = { input_type: inputType, predicate: predicate, output_type: outputType };
+  let ops_filter = { input_type: inputType, predicate: predicate, output_type: outputType, api: api };
   ops_filter = _.omitBy(ops_filter, _.isNil); //remove undefined and null from object  
   let ops = kg.filter(ops_filter);
 
@@ -40,22 +41,28 @@ async function batchResolver(kg, inputIds, inputType, predicate, outputType) {
       if (apiInputIds) {
         valid_ids = valid_ids.concat(apiInputIds);
 
-        let ids = output[id].equivalent_identifiers.map(x => x.identifier).filter(x => x.startsWith(apiInputIdType)); //get apiInputIds but with type always in front
+        let ids = output[id].equivalent_identifiers.map(x => x.identifier).filter(x => x.startsWith(apiInputIdType)); //get prefixed ids
         ids.forEach(apiInputId => {
           valid_original_ids[apiInputId] = id;
         })
       }
     });
 
+    //go to next op if there are no valid ids
+    if (valid_ids.length == 0) {
+      return;
+    }
+
     if (op.query_operation.supportBatch) { // use batch input if available
-      op.input = valid_ids;
-      op.original_input = valid_original_ids;
-      query_ops.push(op);
+      let temp_op = { ...op };
+      temp_op.input = valid_ids;
+      temp_op.original_input = valid_original_ids;
+      query_ops.push(temp_op);
     } else { // create a separate op for each id if batch input isn't available
       for (let i = 0; i < valid_ids.length; i++) {
         let temp_op = { ...op }; //make copy of op
         temp_op.input = [valid_ids[i]];
-        temp_op.original_input = _.pick(valid_original_ids, [valid_ids[i]]);
+        temp_op.original_input = valid_original_ids;
         query_ops.push(temp_op);
       }
     }
@@ -100,6 +107,7 @@ async function batchResolver(kg, inputIds, inputType, predicate, outputType) {
       source: res["$association"].source,
       api: res["$association"].api_name,
       publication: publication,
+      predicate: res["$association"].predicate,
     });
   });
 
@@ -108,22 +116,23 @@ async function batchResolver(kg, inputIds, inputType, predicate, outputType) {
 
 /**
  * Generic resolver for Query fields
- * @param {String} id id (eg. "NCBIGene:1017", "MONDO:0004976")
+ * @param {Array.<string>} ids ids (eg. ["NCBIGene:1017", "MONDO:0004976"])
  * @param {String} ObjectType object type of id (eg. AnatomicalEntity, BiologicalProcess)
  * @return {Object} object with basic fields populated (id, label) and empty values for publication, api, and source fields
  */
-async function baseLevelResolver(id, objectType) {
+async function baseLevelResolver(ids, objectType) {
   let input = {};
-  input[objectType] = [id];
+  input[objectType] = ids;
   let output = await biomedicalIdResolve(input);
 
-  return {
-    id: id,
+  return ids.map(id => ({
+    id: output[id].id.identifier,
     label: output[id].id.label,
-    publication: "",
+    publication: [],
     api: "",
     source: "",
-  };
+    predicate: "",
+  }));
 }
 
 /**
@@ -156,7 +165,7 @@ function getResolvers(kg, edges) {
     Object.keys(edges[objectType]).forEach((outputType) => {
       resolvers[objectType][outputType] = createBatchResolver(async function (parent, args) { 
         ids = parent.map(obj => obj.id);
-        return await batchResolver(kg, ids, objectType, _.get(args, "predicates", null), outputType);
+        return await batchResolver(kg, ids, objectType, outputType, _.get(args, "predicates", null), _.get(args, "apis", null));
       });
     });
 

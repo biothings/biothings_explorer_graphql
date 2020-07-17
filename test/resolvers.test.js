@@ -6,9 +6,18 @@ describe("test base level resolver", function () {
   const baseLevelResolver = resolvers.__get__('baseLevelResolver');
 
   test("id and label fields are filled", async function() {
-    const data = await baseLevelResolver("MONDO:1234", "Disease");
-    expect(data.id.length).toBeGreaterThan(0);
-    expect(data.label.length).toBeGreaterThan(0);
+    const data = await baseLevelResolver(["MONDO:1234"], "Disease");
+    expect(data.length).toEqual(1);
+    expect(data[0].id.length).toBeGreaterThan(0);
+    expect(data[0].label.length).toBeGreaterThan(0);
+  });
+  test("multi query", async function() {
+    const data = await baseLevelResolver(["NCBIGene:7852", "NCBIGene:1234"], "Gene");
+    expect(data.length).toEqual(2);
+    expect(data[0].id.length).toBeGreaterThan(0);
+    expect(data[0].label.length).toBeGreaterThan(0);
+    expect(data[1].id.length).toBeGreaterThan(0);
+    expect(data[1].label.length).toBeGreaterThan(0);
   });
 });
 
@@ -25,7 +34,7 @@ describe("test batch resolver", function () {
 
     let ids = ["MONDO:1234", "MONDO:0004975", "MONDO:12345"];
 
-    const data = await batchResolver(meta_kg, ids, "Disease", "disrupted_by", "ChemicalSubstance");
+    const data = await batchResolver(meta_kg, ids, "Disease", "ChemicalSubstance", ["disrupted_by"]);
     
     //output should be array with length 3
     expect(data.length).toEqual(3);
@@ -33,5 +42,18 @@ describe("test batch resolver", function () {
     //fake ids should return empty array
     expect(data[0].length).toEqual(0);
     expect(data[2].length).toEqual(0);
+  });
+
+  test("does not error on ids that query without prefix", async function() {
+    let meta_kg = new kg();
+    await meta_kg.constructMetaKG();
+
+    let ids = ["CHEMBL.COMPOUND:CHEMBL744"];
+
+    const data = await batchResolver(meta_kg, ids, "ChemicalSubstance", "Gene", "related_to");
+    
+    //output should be array with length 1
+    expect(data.length).toEqual(1);
+    expect(data[0].length).toBeGreaterThan(0); //expect return to have information
   });
 });

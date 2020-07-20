@@ -159,10 +159,13 @@ function getResolvers(kg, edges) {
     };
   });
 
-  //object->object resolvers
   Object.keys(edges).forEach((objectType) => {
     resolvers[objectType] = {};
     Object.keys(edges[objectType]).forEach((outputType) => {
+      //create resolver to map underscore to original api name for api enums
+      resolvers[`${objectType}To${outputType}APIs`] = edges[objectType][outputType].apis.reduce((o, api) => ({...o, [api.replace(/[\W_]/gi, '_')]: api}), {}); 
+      
+      //object->object resolvers
       resolvers[objectType][outputType] = createBatchResolver(async function (parent, args) { 
         ids = parent.map(obj => obj.id);
         return await batchResolver(kg, ids, objectType, outputType, _.get(args, "predicates", null), _.get(args, "apis", null));

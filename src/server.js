@@ -11,7 +11,7 @@ module.exports = (async () => {
 
     let object_types = getObjectTypes(meta_kg.ops);
     let edges = getEdges(meta_kg.ops);
-
+    
     const typeDefs = gql(getSchema(object_types, edges));
 
     const resolvers = getResolvers(meta_kg, edges);

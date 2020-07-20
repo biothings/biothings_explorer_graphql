@@ -9,11 +9,15 @@ const _ = require("lodash");
 function getSchema(object_types, edges) {
   return `
     ${Object.keys(edges).map((objectType) => { //generate an enum for each possible ObjectType -> ObjectType relationship
-      //for example if the input type is Gene and output type is Disease then the enum will be called GeneToDiseasePredicates
+      //for example if the input type is Gene and output type is Disease then the enums will be called GeneToDiseasePredicates and GeneToDiseaseAPIs
       return Object.keys(edges[objectType]).map((outputType) => 
       `
         enum ${objectType}To${outputType}Predicates {
-          ${edges[objectType][outputType].join("\n")}
+          ${edges[objectType][outputType].predicates.join("\n")}
+        }
+        
+        enum ${objectType}To${outputType}APIs {
+          ${edges[objectType][outputType].apis.map(api => api.replace(/[\W_]/gi, '_')).join("\n")}
         }
       `).join("\n");
     }).join("\n")}
@@ -42,7 +46,7 @@ function getSchema(object_types, edges) {
         source: String
         predicate: String
         ${Object.keys(_.get(edges, objectType, {})).map((outputType) => 
-          `${outputType}(predicates: [${objectType}To${outputType}Predicates], apis: [String]): [${outputType}]`
+          `${outputType}(predicates: [${objectType}To${outputType}Predicates], apis: [${objectType}To${outputType}APIs]): [${outputType}]`
         ).join("\n")}
       }
     `).join("\n")}

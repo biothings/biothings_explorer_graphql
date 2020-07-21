@@ -1,5 +1,7 @@
 const { ApolloServer, gql } = require("apollo-server-express");
+const depthLimit = require("graphql-depth-limit");
 const kg = require("@biothings-explorer/smartapi-kg");
+
 const { getObjectTypes, getEdges } = require("./utils");
 const getSchema = require("./schema");
 const getResolvers = require("./resolvers");
@@ -16,11 +18,12 @@ module.exports = (async () => {
 
     const resolvers = getResolvers(meta_kg, edges);
 
-    const server = new ApolloServer({ 
+    const server = new ApolloServer({
       typeDefs, 
       resolvers,
       introspection: true,
       playground: true,
+      validationRules: [depthLimit(5)]
     });
 
     return server;

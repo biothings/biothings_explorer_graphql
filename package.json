@@ -1,6 +1,6 @@
 {
   "name": "biothings-explorer-graphql",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "GraphQL app for BioThings Explorer",
   "main": "index.js",
   "scripts": {
@@ -31,9 +31,12 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
+    "apollo-server-testing": "^2.16.0",
     "coveralls": "^3.1.0",
     "graphql-cli": "^4.0.0",
+    "graphql-tag": "^2.10.4",
     "jest": "^26.1.0",
     "rewire": "^5.0.0"
-  }
+  },
+  "keywords": ["biothings-explorer", "graphql"]
 }

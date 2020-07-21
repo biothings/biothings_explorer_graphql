@@ -16,7 +16,12 @@ module.exports = (async () => {
 
     const resolvers = getResolvers(meta_kg, edges);
 
-    const server = new ApolloServer({ typeDefs, resolvers });
+    const server = new ApolloServer({ 
+      typeDefs, 
+      resolvers,
+      introspection: true,
+      playground: true,
+    });
 
     return server;
   } catch (e) {

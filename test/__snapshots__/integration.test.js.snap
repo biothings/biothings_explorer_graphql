@@ -1,0 +1,248 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`integration tests Test Gene related_to Disease 1`] = `
+Object {
+  "data": Object {
+    "Gene": Array [
+      Object {
+        "Disease": Array [
+          Object {
+            "api": "CORD Gene API",
+            "id": "MONDO:0001280",
+            "label": "choroiditis",
+            "publication": Array [
+              "pmc:PMC6517852",
+            ],
+          },
+          Object {
+            "api": "CORD Gene API",
+            "id": "MONDO:0019200",
+            "label": "retinitis pigmentosa",
+            "publication": Array [
+              "pmc:PMC6517852",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "UMLS:C0004093",
+            "label": "Asthenia",
+            "publication": Array [
+              "pubmed:22391096",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "MONDO:0010557",
+            "label": "choroideremia",
+            "publication": Array [
+              "pubmed:27348340",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "MONDO:0003847",
+            "label": "inherited genetic disease",
+            "publication": Array [
+              "pubmed:23302251",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "MONDO:0005044",
+            "label": "hypertensive disorder",
+            "publication": Array [
+              "pubmed:23834962",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "UMLS:C0021368",
+            "label": "Inflammation",
+            "publication": Array [
+              "pubmed:24856391",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "MONDO:0008159",
+            "label": "postmenopausal osteoporosis",
+            "publication": Array [
+              "pubmed:23410587",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "MONDO:0005263",
+            "label": "unipolar depression",
+            "publication": Array [
+              "pubmed:25115444",
+              "pubmed:28709058",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "UMLS:C0149871",
+            "label": "Deep Vein Thrombosis",
+            "publication": Array [
+              "pubmed:18349091",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "UMLS:C0333606",
+            "label": "UMLS:C0333606",
+            "publication": Array [
+              "pubmed:16179904",
+              "pubmed:16179904",
+              "pubmed:16186368",
+              "pubmed:17962476",
+              "pubmed:17962476",
+              "pubmed:19797200",
+              "pubmed:21565171",
+              "pubmed:21850171",
+              "pubmed:22087103",
+              "pubmed:22772592",
+              "pubmed:24856391",
+              "pubmed:25276414",
+              "pubmed:25593508",
+              "pubmed:25593508",
+              "pubmed:26085992",
+              "pubmed:26521715",
+              "pubmed:26521715",
+              "pubmed:26521715",
+              "pubmed:27658286",
+              "pubmed:27658286",
+              "pubmed:27658286",
+              "pubmed:28763560",
+              "pubmed:28763560",
+              "pubmed:29197825",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "MONDO:0018998",
+            "label": "Leber congenital amaurosis",
+            "publication": Array [
+              "pubmed:28453600",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "UMLS:C0600518",
+            "label": "Choroidal Neovascularization",
+            "publication": Array [
+              "pubmed:21850171",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "UMLS:C0699748",
+            "label": "UMLS:C0699748",
+            "publication": Array [
+              "pubmed:16179904",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "UMLS:C0877373",
+            "label": "Advanced cancer",
+            "publication": Array [
+              "pubmed:20003241",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "MONDO:0000365",
+            "label": "primary congenital glaucoma (disease)",
+            "publication": Array [
+              "pubmed:24856391",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "UMLS:C0009566",
+            "label": "UMLS:C0009566",
+            "publication": Array [
+              "pubmed:25056909",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "UMLS:C0333606",
+            "label": "UMLS:C0333606",
+            "publication": Array [
+              "pubmed:19508456",
+              "pubmed:19661213",
+              "pubmed:22087103",
+              "pubmed:22772592",
+              "pubmed:25118264",
+              "pubmed:25276414",
+              "pubmed:25629076",
+              "pubmed:28698241",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "UMLS:C0333606",
+            "label": "UMLS:C0333606",
+            "publication": Array [
+              "pubmed:19508456",
+              "pubmed:19661213",
+              "pubmed:22087103",
+              "pubmed:22772592",
+              "pubmed:25118264",
+            ],
+          },
+          Object {
+            "api": "SEMMED Gene API",
+            "id": "UMLS:C0333606",
+            "label": "UMLS:C0333606",
+            "publication": Array [
+              "pubmed:16179904",
+              "pubmed:17962476",
+              "pubmed:21850171",
+              "pubmed:22087103",
+            ],
+          },
+          Object {
+            "api": "BioLink API",
+            "id": "MONDO:0008865",
+            "label": "Bietti crystalline corneoretinal dystrophy",
+            "publication": Array [
+              "pubmed:21565171",
+              "pubmed:15937078",
+              "pubmed:15042513",
+              "pubmed:25629076",
+              "pubmed:26085992",
+              "pubmed:15860296",
+              "pubmed:25593508",
+              "pubmed:26865810",
+              "pubmed:23661369",
+              "pubmed:19508456",
+              "pubmed:22693542",
+              "pubmed:23793346",
+              "pubmed:24739949",
+              "pubmed:17962476",
+            ],
+          },
+          Object {
+            "api": "CTD API",
+            "id": "MONDO:0008865",
+            "label": "Bietti crystalline corneoretinal dystrophy",
+            "publication": Array [],
+          },
+        ],
+        "id": "NCBIGene:285440",
+        "label": "cytochrome P450 family 4 subfamily V member 2",
+      },
+    ],
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;

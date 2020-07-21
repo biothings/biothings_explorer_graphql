@@ -38,5 +38,8 @@
     "jest": "^26.1.0",
     "rewire": "^5.0.0"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "keywords": ["biothings-explorer", "graphql"]
 }

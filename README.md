@@ -3,7 +3,7 @@
 GraphQL app for BioThings Explorer
 
 ## Example
-See `examples/` for a complete usage example.
+See `example/` for a complete usage example.
 
 ## Run as a Vanilla Standalone Server
 ### Install
@@ -37,6 +37,8 @@ server.applyMiddleware({ app, path: "/your-path" });
 ```
 
 To pass other parameters to [ApolloServer](https://www.apollographql.com/docs/apollo-server/api/apollo-server/#apolloserver), pass a config object to the `getServer` function. (Refer to [documentation](https://www.apollographql.com/docs/apollo-server/api/apollo-server/#apolloserver) for other options)
+
+See `example/` for an example using more advanced options.
 
 ```js
 const config = {

@@ -57,6 +57,7 @@ const { createLogger, format, transports } = require('winston');
         willSendResponse (context) {
           const stop = Date.now();
           const elapsed = stop - start;
+          
           //distinguish between successes and errors using context.errors
           if (context.errors) {
             logger.error(`Error querying, took ${elapsed} ms`, {query: q, errors: context.errors});

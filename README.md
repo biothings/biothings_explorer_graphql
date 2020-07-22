@@ -2,7 +2,10 @@
 [![npm](https://img.shields.io/npm/v/biothings-explorer-graphql)](https://www.npmjs.com/package/biothings-explorer-graphql) [![Build Status](https://travis-ci.com/ericz1803/biothings_explorer_graphql.svg?branch=master)](https://travis-ci.com/ericz1803/biothings_explorer_graphql) [![Coverage Status](https://coveralls.io/repos/github/ericz1803/biothings_explorer_graphql/badge.svg?branch=master)](https://coveralls.io/github/ericz1803/biothings_explorer_graphql?branch=master)  
 GraphQL app for BioThings Explorer
 
-## Run as a Standalone Server
+## Example
+See `examples/` for a complete usage example.
+
+## Run as a Vanilla Standalone Server
 ### Install
 1. `git clone https://github.com/ericz1803/biothings_explorer_graphql.git`
 2. `cd biothings_explorer_graphql/`
@@ -20,6 +23,7 @@ GraphQL app for BioThings Explorer
 ### Integrate Into Server
 Add the following lines to your express server. (Wrap everything in an `async` function if top level `await` is not available.)  
 By default, it will be served on the `/graphql` path.
+
 ```js
 const getServer = require("biothings-explorer-graphql");
 
@@ -32,18 +36,16 @@ To serve it on a different path, use
 server.applyMiddleware({ app, path: "/your-path" });
 ```
 
-To pass other parameters to [ApolloServer](https://www.apollographql.com/docs/apollo-server/api/apollo-server/#apolloserver), pass a config object to the `getServer` function.
-```js
-const depthLimit = require("graphql-depth-limit"); //npm i graphql-depth-limit
+To pass other parameters to [ApolloServer](https://www.apollographql.com/docs/apollo-server/api/apollo-server/#apolloserver), pass a config object to the `getServer` function. (Refer to [documentation](https://www.apollographql.com/docs/apollo-server/api/apollo-server/#apolloserver) for other options)
 
-const options = {
-    //enable introspection and playground in production
+```js
+const config = {
+    //enable introspection and playground in production 
+    //(these options will be injected into the ApolloServer constructor after the `typeDefs` and `resolvers` are automatically passed in)
     introspection: true,
     playground: true,
-    //use graphql-depth-limit to limit max query depth to 5 levels
-    validationRules: [depthLimit(5)] 
 };
-const server = getServer(options);
+const server = getServer(config);
 ```
 
 

@@ -55,7 +55,7 @@ function getSchema(object_types, edges) {
       ${Object.keys(edges).map((objectType) => 
         `${objectType}(
           """
-            Id or array of ids of inputs, eg. \"NCBIGene:7852\" or [\"NCBIGene:7852\", \"NCBIGene:1234\"]
+            Id or array of ids of inputs in the form "IDType:ID", eg. \"NCBIGene:7852\" or [\"NCBIGene:7852\", \"NCBIGene:1234\"]
           """
           ids: [String]!
           ): [${objectType}]`

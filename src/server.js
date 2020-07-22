@@ -1,12 +1,18 @@
 const { ApolloServer, gql } = require("apollo-server-express");
-const depthLimit = require("graphql-depth-limit");
 const kg = require("@biothings-explorer/smartapi-kg");
 
 const { getObjectTypes, getEdges } = require("./utils");
 const getSchema = require("./schema");
 const getResolvers = require("./resolvers");
 
-module.exports = (async () => {
+/**
+ * get server
+ * @param {Object} options Options to pass into the apollo server
+ * @returns {ApolloServer} apollo server
+ */
+async function getServer(options) {
+  let server_options = options || {};
+
   try {
     let meta_kg = new kg();
     await meta_kg.constructMetaKG();
@@ -21,13 +27,14 @@ module.exports = (async () => {
     const server = new ApolloServer({
       typeDefs, 
       resolvers,
-      introspection: true,
-      playground: true,
-      validationRules: [depthLimit(5)]
+      ...server_options
     });
 
     return server;
   } catch (e) {
+    console.log("Error configuring server.");
     console.log(e);
   }
-})();
+}
+
+module.exports = getServer;

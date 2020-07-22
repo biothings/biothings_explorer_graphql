@@ -2,12 +2,13 @@
 
 const { createTestClient } = require('apollo-server-testing');
 const gql = require('graphql-tag');
+const getServer = require("../src/server");
 
 describe("integration tests", function () {
   let server;
 
   beforeAll(async function() {
-    server = await require("../src/server");
+    server = await getServer();
   });
 
   beforeEach(function() {

@@ -71,8 +71,8 @@ const { createLogger, format, transports } = require('winston');
   const config = {
     introspection: true,
     playground: true,
-    plugins: [LogPlugin],  
-    validationRules: [depthLimit(2)] 
+    plugins: [LogPlugin], //plugin that uses winston to log info
+    validationRules: [depthLimit(5)] //limit query depth to 5
   }
   const server = await getServer(config);
   server.applyMiddleware({ app });

@@ -5,17 +5,7 @@ GraphQL app for BioThings Explorer
 ## Example
 See [`example/`](example/) for a complete usage example.
 
-## Run as a Vanilla Standalone Server
-### Install
-1. `git clone https://github.com/ericz1803/biothings_explorer_graphql.git`
-2. `cd biothings_explorer_graphql/`
-3. `npm install`
-4. `npm install graphql express`
-
-### Start Server
-`npm start`
-
-## Integrate into existing Express server
+## Integrate into existing Express server (recommended)
 ### Install
 1. `npm install biothings-explorer-graphql graphql`
 2. `npm install express` (ignore this step if express is already installed)
@@ -49,6 +39,16 @@ const config = {
 };
 const server = getServer(config);
 ```
+
+## Run as a Vanilla Standalone Server
+### Install
+1. `git clone https://github.com/ericz1803/biothings_explorer_graphql.git`
+2. `cd biothings_explorer_graphql/`
+3. `npm install`
+4. `npm install graphql express`
+
+### Start Server
+`npm start`
 
 
 ## Run Tests

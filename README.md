@@ -2,8 +2,11 @@
 [![npm](https://img.shields.io/npm/v/biothings-explorer-graphql)](https://www.npmjs.com/package/biothings-explorer-graphql) [![Build Status](https://travis-ci.com/ericz1803/biothings_explorer_graphql.svg?branch=master)](https://travis-ci.com/ericz1803/biothings_explorer_graphql) [![Coverage Status](https://coveralls.io/repos/github/ericz1803/biothings_explorer_graphql/badge.svg?branch=master)](https://coveralls.io/github/ericz1803/biothings_explorer_graphql?branch=master)  
 GraphQL app for BioThings Explorer
 
-## Example
+## Example Usage
 See [`example/`](example/) for a complete usage example.
+
+## Making Queries
+Visit the wiki page on [Forming and Executing Queries](https://github.com/ericz1803/biothings_explorer_graphql/wiki/Forming-and-Executing-Queries) for more info.
 
 ## Integrate into existing Express server (recommended)
 ### Install

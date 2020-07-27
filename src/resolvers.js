@@ -14,9 +14,10 @@ const filterResults = require("biothings-explorer-filters");
  * @param {String | Array.<string>} predicate predicate (eg. related_to, treats)
  * @param {String | Array.<string>} api apis to query (eg. "Automat PHAROS API")
  * @param {String} sortBy option to sort by (either "ngd_overall" or "ngd_starred")
+ * @param {Number} maxResults maximum results for the level
  * @return {Array} array of arrays of objects that is in the shape of an ObjectType
  */
-async function batchResolver(kg, inputIds, inputType, outputType, predicate, api, sortBy) {
+async function batchResolver(kg, inputIds, inputType, outputType, predicate, api, sortBy, maxResults) {
   //get list of apis to query using smartapi-kg
   let ops_filter = { input_type: inputType, predicate: predicate, output_type: outputType, api: api };
   ops_filter = _.omitBy(ops_filter, _.isNil); //remove undefined and null from object  
@@ -77,7 +78,8 @@ async function batchResolver(kg, inputIds, inputType, outputType, predicate, api
 
   //get correlation and apply filter/sort
   let filterOptions = {
-    sort_by: sortBy
+    sort_by: sortBy,
+    max_results: maxResults
   }
   result = await filterResults(result, filterOptions);
   
@@ -177,7 +179,7 @@ function getResolvers(kg, edges) {
       //object->object resolvers
       resolvers[objectType][outputType] = createBatchResolver(async function (parent, args) { 
         ids = parent.map(obj => obj.id);
-        return await batchResolver(kg, ids, objectType, outputType, _.get(args, "predicates", null), _.get(args, "apis", null), _.get(args, "sortBy", null));
+        return await batchResolver(kg, ids, objectType, outputType, _.get(args, "predicates", null), _.get(args, "apis", null), _.get(args, "sortBy", null), _.get(args, "maxResults", null));
       });
     });
 

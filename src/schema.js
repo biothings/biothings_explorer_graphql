@@ -60,7 +60,7 @@ function getSchema(object_types, edges) {
         "Correlation between two entities, lower means stronger correlation"
         correlation: Correlation
         ${Object.keys(_.get(edges, objectType, {})).map((outputType) => 
-          `${outputType}(predicates: [${objectType}To${outputType}Predicates], apis: [${objectType}To${outputType}APIs], sortBy: sortByOptions): [${outputType}]`
+          `${outputType}(predicates: [${objectType}To${outputType}Predicates], apis: [${objectType}To${outputType}APIs], sortBy: sortByOptions, maxResults: Int): [${outputType}]`
         ).join("\n")}
       }
     `).join("\n")}

@@ -2,6 +2,7 @@ const callApis = require("@biothings-explorer/call-apis");
 const biomedicalIdResolve = require("biomedical_id_resolver");
 const _ = require("lodash");
 const { createBatchResolver } = require("graphql-resolve-batch");
+const filterResults = require("biothings-explorer-filters");
 
 /**
  * Generic batch resolver for deeper queries (2nd level and deeper)
@@ -12,9 +13,10 @@ const { createBatchResolver } = require("graphql-resolve-batch");
  * @param {String | Array.<string>} outputTypes output object types (eg. AnatomicalEntity, BiologicalProcess)
  * @param {String | Array.<string>} predicate predicate (eg. related_to, treats)
  * @param {String | Array.<string>} api apis to query (eg. "Automat PHAROS API")
+ * @param {String} sortBy option to sort by (either "ngd_overall" or "ngd_starred")
  * @return {Array} array of arrays of objects that is in the shape of an ObjectType
  */
-async function batchResolver(kg, inputIds, inputType, outputType, predicate, api) {
+async function batchResolver(kg, inputIds, inputType, outputType, predicate, api, sortBy) {
   //get list of apis to query using smartapi-kg
   let ops_filter = { input_type: inputType, predicate: predicate, output_type: outputType, api: api };
   ops_filter = _.omitBy(ops_filter, _.isNil); //remove undefined and null from object  
@@ -73,6 +75,12 @@ async function batchResolver(kg, inputIds, inputType, outputType, predicate, api
   await queryExecutor.query();
   let result = queryExecutor.result;
 
+  //get correlation and apply filter/sort
+  let filterOptions = {
+    sort_by: sortBy
+  }
+  result = await filterResults(result, filterOptions);
+  
   //object with an array for each id
   let ret = {};
   inputIds.forEach(inputId => {
@@ -108,6 +116,7 @@ async function batchResolver(kg, inputIds, inputType, outputType, predicate, api
       api: res["$association"].api_name,
       publication: publication,
       predicate: res["$association"].predicate,
+      correlation: res.correlation,
     });
   });
 
@@ -168,7 +177,7 @@ function getResolvers(kg, edges) {
       //object->object resolvers
       resolvers[objectType][outputType] = createBatchResolver(async function (parent, args) { 
         ids = parent.map(obj => obj.id);
-        return await batchResolver(kg, ids, objectType, outputType, _.get(args, "predicates", null), _.get(args, "apis", null));
+        return await batchResolver(kg, ids, objectType, outputType, _.get(args, "predicates", null), _.get(args, "apis", null), _.get(args, "sortBy", null));
       });
     });
 

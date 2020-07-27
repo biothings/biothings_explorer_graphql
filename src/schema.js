@@ -8,6 +8,16 @@ const _ = require("lodash");
  */
 function getSchema(object_types, edges) {
   return `
+    enum sortByOptions {
+      ngd_overall
+      ngd_starred
+    }
+
+    type Correlation {
+      ngd_overall: Float
+      ngd_starred: Float
+    }
+
     ${Object.keys(edges).map((objectType) => { //generate an enum for each possible ObjectType -> ObjectType relationship
       //for example if the input type is Gene and output type is Disease then the enums will be called GeneToDiseasePredicates and GeneToDiseaseAPIs
       return Object.keys(edges[objectType]).map((outputType) => 
@@ -32,6 +42,8 @@ function getSchema(object_types, edges) {
       api: String
       source: String
       predicate: String
+      "Correlation between two entities, lower means stronger correlation"
+      correlation: Correlation
     }
     
     ${object_types.map((objectType) => `
@@ -45,8 +57,10 @@ function getSchema(object_types, edges) {
         api: String
         source: String
         predicate: String
+        "Correlation between two entities, lower means stronger correlation"
+        correlation: Correlation
         ${Object.keys(_.get(edges, objectType, {})).map((outputType) => 
-          `${outputType}(predicates: [${objectType}To${outputType}Predicates], apis: [${objectType}To${outputType}APIs]): [${outputType}]`
+          `${outputType}(predicates: [${objectType}To${outputType}Predicates], apis: [${objectType}To${outputType}APIs], sortBy: sortByOptions): [${outputType}]`
         ).join("\n")}
       }
     `).join("\n")}

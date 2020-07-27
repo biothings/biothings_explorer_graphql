@@ -4,6 +4,7 @@
   "description": "GraphQL app for BioThings Explorer",
   "main": "src/server.js",
   "scripts": {
+    "start": "node serve.js",
     "serve": "node serve.js",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "test": "jest"
@@ -23,6 +24,7 @@
     "@biothings-explorer/smartapi-kg": "^1.1.6",
     "apollo-server-express": "^2.16.0",
     "biomedical_id_resolver": "^1.0.8",
+    "biothings-explorer-filters": "^1.0.0",
     "graphql-resolve-batch": "^1.0.2",
     "lodash": "^4.17.19"
   },

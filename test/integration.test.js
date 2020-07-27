@@ -38,7 +38,14 @@ describe("integration tests", function () {
     const { query } = createTestClient(server);
     const res = await query({query: DiseaseRelatedToChemicalSubstance});
     expect(res.data.Disease[0].ChemicalSubstance.length).toEqual(25);
-    expect(res).toMatchSnapshot();
+    //make sure it is in ascending order or before a -1 (meaning error)
+    for (let i = 0; i < 24; i++) {
+      try {
+        expect(res.data.Disease[0].ChemicalSubstance[i].correlation.ngd_overall).toBeLessThanOrEqual(res.data.Disease[0].ChemicalSubstance[i + 1].correlation.ngd_overall);
+      } catch {
+        expect(es.data.Disease[0].ChemicalSubstance[i + 1].correlation.ngd_overall).toEqual(-1);
+      }
+    }
   }); 
 
   test("Test Gene related_to Disease", async function() {

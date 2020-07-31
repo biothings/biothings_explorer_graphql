@@ -1,9 +1,10 @@
 {
   "name": "biothings-explorer-graphql",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "GraphQL app for BioThings Explorer",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
+    "start": "node serve.js",
     "serve": "node serve.js",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "test": "jest"
@@ -23,17 +24,27 @@
     "@biothings-explorer/smartapi-kg": "^1.1.6",
     "apollo-server-express": "^2.16.0",
     "biomedical_id_resolver": "^1.0.8",
-    "graphql": "^15.3.0",
+    "biothings-explorer-filters": "^1.0.0",
     "graphql-resolve-batch": "^1.0.2",
     "lodash": "^4.17.19"
   },
   "peerDependencies": {
+    "graphql": "^15.3.0",
     "express": "^4.17.1"
   },
   "devDependencies": {
+    "apollo-server-testing": "^2.16.0",
     "coveralls": "^3.1.0",
     "graphql-cli": "^4.0.0",
+    "graphql-tag": "^2.10.4",
     "jest": "^26.1.0",
     "rewire": "^5.0.0"
-  }
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "keywords": [
+    "biothings-explorer",
+    "graphql"
+  ]
 }

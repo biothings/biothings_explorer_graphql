@@ -113,6 +113,7 @@ describe("test getEdges function", function () {
           input_type: "Gene",
           output_type: "Disease",
           predicate: "related_to",
+          api_name: "Automat PHAROS API"
         },
       },
       {
@@ -120,6 +121,7 @@ describe("test getEdges function", function () {
           input_type: "Gene",
           output_type: "Disease",
           predicate: "affects",
+          api_name: "MGIgene2phenotype API"
         },
       },
       {
@@ -127,6 +129,7 @@ describe("test getEdges function", function () {
           input_type: "BiologicalProcess",
           output_type: "Disease",
           predicate: "related_to",
+          api_name: "Automat CORD19 Scibite API"
         },
       },
       {
@@ -134,14 +137,19 @@ describe("test getEdges function", function () {
           input_type: "AnatomicalEntity",
           output_type: "Disease",
           predicate: "related_to",
+          api_name: "Automat PHAROS API"
         },
       },
     ];
 
     let output = getEdges(input);
-    expect(output["Gene"]["Disease"]).toEqual(["affects", "related_to"]);
-    expect(output["BiologicalProcess"]["Disease"]).toEqual(["related_to"]);
-    expect(output["AnatomicalEntity"]["Disease"]).toEqual(["related_to"]);
+    expect(output["Gene"]["Disease"].predicates).toEqual(["affects", "related_to"]);
+    expect(output["BiologicalProcess"]["Disease"].predicates).toEqual(["related_to"]);
+    expect(output["AnatomicalEntity"]["Disease"].predicates).toEqual(["related_to"]);
+
+    expect(output["Gene"]["Disease"].apis).toEqual(["Automat PHAROS API", "MGIgene2phenotype API"]);
+    expect(output["BiologicalProcess"]["Disease"].apis).toEqual(["Automat CORD19 Scibite API"]);
+    expect(output["AnatomicalEntity"]["Disease"].apis).toEqual(["Automat PHAROS API"]);
   });
 
   test("Special case with colon", function () {
@@ -150,27 +158,32 @@ describe("test getEdges function", function () {
         association: {
           input_type: "biolink:Gene",
           output_type: "biolink:Disease",
-          predicate: "biolink:related_to"
+          predicate: "biolink:related_to",
+          api_name: "Biolink API"
         },
       },
       {
         association: {
           input_type: "Gene",
           output_type: "Disease",
-          predicate: "related_to"
+          predicate: "related_to",
+          api_name: "Biolink API"
         },
       },
       {
         association: {
           input_type: "Gene",
           output_type: "Disease",
-          predicate: "affects"
+          predicate: "affects",
+          api_name: "MyVariant.info API"
         },
       },
     ];
 
     let output = getEdges(input);
-    expect(output["Gene"]["Disease"]).toEqual(["affects", "related_to"]);
+    expect(output["Gene"]["Disease"].predicates).toEqual(["affects", "related_to"]);
     expect(output.hasOwnProperty("biolink:Gene")).toBeFalsy();
+
+    expect(output["Gene"]["Disease"].apis).toEqual(["Biolink API", "MyVariant.info API"]);
   });
 });

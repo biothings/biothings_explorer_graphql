@@ -12,6 +12,7 @@ describe("test getSchema", function () {
           input_type: "Gene",
           output_type: "Disease",
           predicate: "related_to",
+          api_name: "Automat PHAROS API"
         },
       },
       {
@@ -19,6 +20,7 @@ describe("test getSchema", function () {
           input_type: "biolink:Gene",
           output_type: "biolink:Disease",
           predicate: "biolink:related_to",
+          api_name: "Biolink API"
         },
       },
       {
@@ -26,6 +28,7 @@ describe("test getSchema", function () {
           input_type: "Gene",
           output_type: "Disease",
           predicate: "affects",
+          api_name: "Automat PHAROS API"
         },
       },
       {
@@ -33,6 +36,7 @@ describe("test getSchema", function () {
           input_type: "BiologicalProcess",
           output_type: "Disease",
           predicate: "related_to",
+          api_name: "Automat PHAROS API"
         },
       },
       {
@@ -40,6 +44,7 @@ describe("test getSchema", function () {
           input_type: "AnatomicalEntity",
           output_type: "Disease",
           predicate: "related_to",
+          api_name: "Automat PHAROS API"
         },
       },
     ];
@@ -57,7 +62,10 @@ describe("test getSchema", function () {
 
   test("Correct number of enums",() => {
     let enums = schema.definitions.filter(obj => (obj.kind == "EnumTypeDefinition"));
-    expect(enums.length).toBe(3); //3 different ways Gene->Disease, BiologicalProcess->Disease, AnatomicalEntity->Disease
+    //3 different ways Gene->Disease, BiologicalProcess->Disease, AnatomicalEntity->Disease
+    //expect 3 predicate enums and 3 api enums
+    expect(enums.filter(e => e.name.value.includes("API")).length).toBe(3);
+    expect(enums.filter(e => e.name.value.includes("Predicates")).length).toBe(3); 
   })
 
   test("Correct number of object types",() => {

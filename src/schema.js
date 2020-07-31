@@ -8,12 +8,26 @@ const _ = require("lodash");
  */
 function getSchema(object_types, edges) {
   return `
+    enum sortByOptions {
+      ngd_overall
+      ngd_starred
+    }
+
+    type Correlation {
+      ngd_overall: Float
+      ngd_starred: Float
+    }
+
     ${Object.keys(edges).map((objectType) => { //generate an enum for each possible ObjectType -> ObjectType relationship
-      //for example if the input type is Gene and output type is Disease then the enum will be called GeneToDiseasePredicates
+      //for example if the input type is Gene and output type is Disease then the enums will be called GeneToDiseasePredicates and GeneToDiseaseAPIs
       return Object.keys(edges[objectType]).map((outputType) => 
       `
         enum ${objectType}To${outputType}Predicates {
-          ${edges[objectType][outputType].join("\n")}
+          ${edges[objectType][outputType].predicates.join("\n")}
+        }
+        
+        enum ${objectType}To${outputType}APIs {
+          ${edges[objectType][outputType].apis.map(api => api.replace(/[\W_]/gi, '_')).join("\n")}
         }
       `).join("\n");
     }).join("\n")}
@@ -28,6 +42,8 @@ function getSchema(object_types, edges) {
       api: String
       source: String
       predicate: String
+      "Correlation between two entities, lower means stronger correlation"
+      correlation: Correlation
     }
     
     ${object_types.map((objectType) => `
@@ -41,14 +57,23 @@ function getSchema(object_types, edges) {
         api: String
         source: String
         predicate: String
+        "Correlation between two entities, lower means stronger correlation"
+        correlation: Correlation
         ${Object.keys(_.get(edges, objectType, {})).map((outputType) => 
-          `${outputType}(predicates: [${objectType}To${outputType}Predicates], apis: [String]): [${outputType}]`
+          `${outputType}(predicates: [${objectType}To${outputType}Predicates], apis: [${objectType}To${outputType}APIs], sortBy: sortByOptions, maxResults: Int): [${outputType}]`
         ).join("\n")}
       }
     `).join("\n")}
 
     type Query {
-      ${Object.keys(edges).map((objectType) => `${objectType}(id: [String]!): [${objectType}]`).join("\n") /* use edges since that will only give possible inputs*/}
+      ${Object.keys(edges).map((objectType) => 
+        `${objectType}(
+          """
+            Id or array of ids of inputs in the form "IDType:ID", eg. \"NCBIGene:7852\" or [\"NCBIGene:7852\", \"NCBIGene:1234\"]
+          """
+          ids: [String]!
+          ): [${objectType}]`
+      ).join("\n") /* use edges since that will only give possible inputs*/}
     }
   `;
 }

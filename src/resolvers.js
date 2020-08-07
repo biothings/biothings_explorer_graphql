@@ -40,11 +40,11 @@ async function batchResolver(kg, inputIds, inputType, outputType, predicate, api
 
     //attempt to resolve all ids
     resolvedIds.forEach(id => { 
-      let apiInputIds = output[id].bte_ids[apiInputIdType];
+      let apiInputIds = output[id].db_ids[apiInputIdType];
       if (apiInputIds) {
         valid_ids = valid_ids.concat(apiInputIds);
 
-        let ids = output[id].equivalent_identifiers.map(x => x.identifier).filter(x => x.startsWith(apiInputIdType)); //get prefixed ids
+        let ids = output[id].curies.filter(x => x.startsWith(apiInputIdType)); //get prefixed ids
         ids.forEach(apiInputId => {
           valid_original_ids[apiInputId] = id;
         })

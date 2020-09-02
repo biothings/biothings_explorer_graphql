@@ -20,13 +20,13 @@
   },
   "homepage": "https://github.com/ericz1803/biothings_explorer_graphql#readme",
   "dependencies": {
-    "@biothings-explorer/call-apis": "~1.0.7",
-    "@biothings-explorer/smartapi-kg": "~1.2.2",
+    "@biothings-explorer/call-apis": "^1.1.0",
+    "@biothings-explorer/smartapi-kg": "^1.4.0",
     "apollo-server-express": "^2.16.1",
-    "biomedical_id_resolver": "~1.1.0",
+    "biomedical_id_resolver": "^1.2.0",
     "biothings-explorer-filters": "^1.0.1",
     "graphql-resolve-batch": "^1.0.2",
-    "lodash": "^4.17.19"
+    "lodash": "^4.17.20"
   },
   "peerDependencies": {
     "graphql": "^15.3.0",
@@ -37,7 +37,7 @@
     "coveralls": "^3.1.0",
     "graphql-cli": "^4.0.0",
     "graphql-tag": "^2.11.0",
-    "jest": "^26.2.2",
+    "jest": "^26.4.2",
     "rewire": "^5.0.0"
   },
   "jest": {

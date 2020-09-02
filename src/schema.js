@@ -71,7 +71,7 @@ function getSchema(object_types, edges) {
           """
             Id or array of ids of inputs in the form "IDType:ID", eg. \"NCBIGene:7852\" or [\"NCBIGene:7852\", \"NCBIGene:1234\"]
           """
-          ids: [String]!
+          ids: [String!]!
           ): [${objectType}]`
       ).join("\n") /* use edges since that will only give possible inputs*/}
     }

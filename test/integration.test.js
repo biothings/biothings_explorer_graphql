@@ -65,6 +65,8 @@ describe("integration tests", function () {
     `
     const { query } = createTestClient(server);
     const res = await query({query: GeneRelatedToDisease});
-    expect(res).toMatchSnapshot();
+    expect(Array.isArray(res.data.Gene)).toBe(true);
+    expect(Array.isArray(res.data.Gene[0].Disease)).toBe(true);
+    expect(res.data.Gene[0].Disease.length).toBeGreaterThan(0);
   }); 
 });

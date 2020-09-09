@@ -6,7 +6,7 @@ GraphQL app for BioThings Explorer
 See [`example/`](example/) for a complete usage example.
 
 ## Making Queries
-Visit the wiki page on [Forming and Executing Queries](https://github.com/ericz1803/biothings_explorer_graphql/wiki/Forming-and-Executing-Queries) for more info.
+Visit the wiki page on [Forming and Executing Queries](https://github.com/ericz1803/biothings_explorer_graphql/wiki/Forming-and-Executing-Queries) for more info or go [here](https://graphqlbin.com/v2/pzM9Fn) to see some demo queries.
 
 ## Integrate into existing Express server (recommended)
 ### Install
